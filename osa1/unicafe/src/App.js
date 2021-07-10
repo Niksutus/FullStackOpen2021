@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 
+const Button = (props) => {
+  return (
+    <div>
+      <button onClick={props.handleClick}>{props.text}</button>
+    </div>
+  );
+};
+
 const Statistics = (props) => {
-  console.log(props)
   const { good, neutral, bad } = props;
 
-  if(props.good === 0 && props.neutral === 0 && props.bad === 0) {
-    return(
+  if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
+    return (
       <div>
+        <h1>statistics</h1>
         <p>No feedback given</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -38,9 +46,9 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button onClick={addGoodVote}>good</button>
-      <button onClick={addNeutralVote}>neutral</button>
-      <button onClick={addBadVote}>bad</button>
+      <Button handleClick={addGoodVote} text="good" />
+      <Button handleClick={addNeutralVote} text="neutral" />
+      <Button handleClick={addBadVote} text="bad" />
 
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
