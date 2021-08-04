@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [ persons, setPersons] = useState([
@@ -9,13 +12,12 @@ const App = () => {
   ]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  // const [ filteredNameList, setFilteredNameList ] = useState([])
+  const [ filter, setFilter ] = useState('')
 
   
   const nameArray = persons.map(person => person.name)
 
-  const addPerson = (event) => {
-    event.preventDefault()
+  const addPerson = () => {
     const personObject = {
       name: newName,
       number: newNumber,
@@ -32,56 +34,27 @@ const App = () => {
   }
 
   const handleNameChange = (event) => {
-    setNewName(event.target.value);
+    setNewName(event);
   }
 
   const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
+    setNewNumber(event);
   }
 
-  // Filter 
-  
-  // const handleFilterChange = (event) => {
-    
-  //   for(let i = 0; i < filteredNameList.length; i++){
-  //     setFilteredNameList(filteredNameList.pop(filteredNameList[i]))
-  //     return
-  //   }
-
-  //   let filter = event.target.value.toLowerCase();
-  //   let array = [];
-
-  //   for(let i = 0; i < persons.length; i++){
-  //     if (persons[i].name.toLowerCase().includes(filter)) {
-  //       array.push(persons[i])
-  //     }
-  //   }
-
-  //   setFilteredNameList(filteredNameList.concat(array));
-  // }
+  const handleFilterChange = (event) => {
+    setFilter(event)
+  }
  
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-          filter shown with: <input/>
-        </div>
+      <Filter handleFilterChange = {(e)=>handleFilterChange(e)}/>
+        
       <h2>add a new</h2>
-      <form onSubmit = {addPerson}>
-        <div>
-          name: <input onChange={handleNameChange} value={newName}/>
-        </div>
-        <div>number: <input onChange={handleNumberChange} value={newNumber}/></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm addPerson ={addPerson} handleNameChange = {(e) => {handleNameChange(e)}} handleNumberChange = {(e)=>{handleNumberChange(e)}} newName = {newName} newNumber = {newNumber}/>
+
       <h2>Numbers</h2>
-        {persons.map(person => 
-          <p key={person.name}>
-            {person.name} {person.number}
-          </p>
-        )}
+      <Persons persons={persons} filter={filter}/>
     </div>
   )
 
