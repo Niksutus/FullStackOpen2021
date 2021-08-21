@@ -19,7 +19,7 @@ const App = () => {
   }, [])
 
   
-  const nameArray = persons.map(person => person.name)
+  const nameArray = persons.map(person => person.name.toLowerCase())
 
   const addPerson = () => {
     const personObject = {
@@ -27,8 +27,13 @@ const App = () => {
       number: newNumber,
     }
 
-    if(nameArray.indexOf(newName) !== -1){
-      alert(`${newName} is already added to phonebook`)
+    if(nameArray.indexOf(newName.toLocaleLowerCase()) !== -1){
+        if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+          const person = persons.find(n => n.name.toLowerCase() === newName.toLowerCase())
+          const changedPerson = {...person, number: newNumber};
+          personsService.edit(person.id, changedPerson);
+          setPersons(persons.map(a => a.id !== person.id ? a : changedPerson))
+        }
     } else {
       personsService
       .create(personObject)
@@ -40,7 +45,7 @@ const App = () => {
     }
     
   }
-  
+
   const deletePerson = (id, name) => {
 
     if (window.confirm(`Delete ${name}?`)) {

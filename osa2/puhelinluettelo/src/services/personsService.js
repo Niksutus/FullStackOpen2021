@@ -17,4 +17,8 @@ const deletePerson = (id) => {
     axios.delete(baseUrl+id)
 }
 
-export default {getAll, create, deletePerson}
+const edit = (id, changedPerson) => {
+    axios.put(baseUrl+id, changedPerson)
+}
+
+export default {getAll, create, deletePerson, edit}
