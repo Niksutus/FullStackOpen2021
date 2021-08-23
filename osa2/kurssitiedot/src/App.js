@@ -1,27 +1,6 @@
 const Header = ({ course }) => {
-  console.log(course)
-  return <h1>{course.name}</h1>;
-};
 
-const Total = ({ course }) => {
-  const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  const exericesArray = course.parts.map((part) => part.exercises);
-  console.log(exericesArray);
-  const sum = exericesArray.reduce(reducer);
-
-  return (
-    <p>
-      <b>total of {sum} exercises</b>
-    </p>
-  );
-};
-
-const Part = ({ part }) => {
-  return (
-    <p>
-      {part.name} {part.exercises}
-    </p>
-  );
+  return <h2>{course.name}</h2>;
 };
 
 const Content = ({ course }) => {
@@ -34,19 +13,36 @@ const Content = ({ course }) => {
   );
 };
 
-const Course = ({ courses }) => {
+const Part = ({ part }) => {
+  return (
+    <p>
+      {part.name} {part.exercises}
+    </p>
+  );
+};
+
+const Total = ({ course }) => {
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  const exericesArray = course.parts.map((part) => part.exercises);
+  const sum = exericesArray.reduce(reducer);
+  
+  return (
+    <p>
+      <b>total of {sum} exercises</b>
+    </p>
+  );
+};
+
+
+const Course = ({ course }) => {
     
   return (
     <>
-      {courses.map((course) => (
-        <Header key={course.id} course={course}/>
-      ))}
-      {courses.map((course) => (
-        <Content key={course.id} course={course}/>
-      ))}
-      {courses.map((course) => (
-        <Total key={course.id} course={course}/>
-      ))}
+        <Header course={course}/>
+
+        <Content course={course}/>
+        
+        <Total course={course}/>
     </>
   );
 };
@@ -99,7 +95,10 @@ const App = () => {
 
   return (
     <div>
-      <Course courses={courses} />
+      <h1>Web development curriculum</h1>
+      {courses.map((course) => {
+        return <Course key={course.id} course={course}/>
+      })}
     </div>
   );
 };
