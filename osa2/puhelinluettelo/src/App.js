@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import personsService from './services/personsService'
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
+  const [ notification, setNotification ] = useState(null)
 
   useEffect(() => {
     personsService
@@ -33,14 +35,24 @@ const App = () => {
           const changedPerson = {...person, number: newNumber};
           personsService.edit(person.id, changedPerson);
           setPersons(persons.map(a => a.id !== person.id ? a : changedPerson))
+          setNotification(`Phone number of ${newName} has been changed succesfully`);
+          setNewName('');
+          setNewNumber('');
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         }
     } else {
       personsService
       .create(personObject)
       .then(response => {
         setPersons(persons.concat(response))
+        setNotification(`${newName} has been added successfully`)
         setNewName('')
         setNewNumber('')
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
       })
     }
     
@@ -51,6 +63,10 @@ const App = () => {
     if (window.confirm(`Delete ${name}?`)) {
       personsService.deletePerson(id);
       setPersons(persons.filter(n => n.id !== id))
+      setNotification(`${name} has been deleted succesfully`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     }
   }
 
@@ -70,6 +86,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={notification}/>
+
       <Filter handleFilterChange = {(e)=>handleFilterChange(e)}/>
         
       <h2>add a new</h2>
@@ -82,4 +101,4 @@ const App = () => {
 
 }
 
-export default App
+export default App;
