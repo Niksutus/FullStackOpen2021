@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Notification from './components/Notification'
+import ErrorMessage from './components/ErrorMessage'
 import personsService from './services/personsService'
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
   const [ notification, setNotification ] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personsService
@@ -33,14 +35,27 @@ const App = () => {
         if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
           const person = persons.find(n => n.name.toLowerCase() === newName.toLowerCase())
           const changedPerson = {...person, number: newNumber};
-          personsService.edit(person.id, changedPerson);
-          setPersons(persons.map(a => a.id !== person.id ? a : changedPerson))
-          setNotification(`Phone number of ${newName} has been changed succesfully`);
-          setNewName('');
-          setNewNumber('');
-          setTimeout(() => {
-            setNotification(null)
-          }, 5000)
+          personsService
+            .edit(person.id, changedPerson)
+            .then(returnedPerson => {
+              console.log(returnedPerson)
+              setPersons(persons.map(a => a.id !== person.id ? a : returnedPerson))
+              setNotification(`Phone number of ${newName} has been changed succesfully`);
+              setNewName('');
+              setNewNumber('');
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)
+            })
+            .catch(error => {
+              setErrorMessage(`Information of ${changedPerson.name} has already been removed from server`)
+              setPersons(persons.filter(person => person.id !== changedPerson.id));
+              setNewName('');
+              setNewNumber('');
+              setTimeout(()=> {
+                setErrorMessage(null)
+              }, 5000)
+            })
         }
     } else {
       personsService
@@ -55,7 +70,6 @@ const App = () => {
         }, 5000)
       })
     }
-    
   }
 
   const deletePerson = (id, name) => {
@@ -86,7 +100,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-
+      
+      <ErrorMessage message={errorMessage}/>
       <Notification message={notification}/>
 
       <Filter handleFilterChange = {(e)=>handleFilterChange(e)}/>
