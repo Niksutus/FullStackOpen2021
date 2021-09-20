@@ -171,3 +171,7 @@ describe('The most likes', () => {
     })
   })
 })
+
+module.exports = {
+  blogs
+}
