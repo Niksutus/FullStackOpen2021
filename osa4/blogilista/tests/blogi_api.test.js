@@ -73,6 +73,15 @@ test('right amount of blogs are returned as json', async () => {
   expect(response.body).toHaveLength(blogs.length)
 })
 
+test('blogien identifioivan kentän nimi on id', async () => {
+  const response = await api
+    .get('/api/blogs/')
+  
+  for (let blog of response.body){
+    expect(blog.id).toBeDefined()
+  }
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
