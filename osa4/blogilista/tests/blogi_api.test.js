@@ -88,6 +88,25 @@ test('if the new blog does not have the fields title and url return with status 
 
 })
 
+test('test that a specific blog gets deleted from the database', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(
+    helper.initalBlogs.length -1 
+  )
+
+  const idArray = blogsAtEnd.map(blog => blog.id)
+
+  expect(idArray).not.toContain(blogToDelete.id)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
