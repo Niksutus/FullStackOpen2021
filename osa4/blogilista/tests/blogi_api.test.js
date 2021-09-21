@@ -56,6 +56,24 @@ test('a blog with the right contents gets added to the database', async () => {
   )
 })
 
+test('when likes has not been given value it is automatically set as zero', async () => {
+  
+  const newBlog = {
+    title: "Title Name",
+    author: "Author Name",
+    url: "Url",
+  }
+
+  await api
+    .post('/api/blogs/')
+    .send(newBlog)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd[blogsAtEnd.length -1].likes).toBe(0)
+
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
