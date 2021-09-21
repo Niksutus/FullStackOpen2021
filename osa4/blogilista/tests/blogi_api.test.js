@@ -61,7 +61,7 @@ test('when likes has not been given value it is automatically set as zero', asyn
   const newBlog = {
     title: "Title Name",
     author: "Author Name",
-    url: "Url",
+    url: "Url"
   }
 
   await api
@@ -71,6 +71,20 @@ test('when likes has not been given value it is automatically set as zero', asyn
   const blogsAtEnd = await helper.blogsInDb()
 
   expect(blogsAtEnd[blogsAtEnd.length -1].likes).toBe(0)
+
+})
+
+test('if the new blog does not have the fields title and url return with status code 400 Bad Request', async () => {
+
+  const newBlog = {
+    author: "Test Author",
+    likes: 20
+  }
+
+  const response =  await api
+    .post('/api/blogs/')
+    .send(newBlog)
+    .expect(400)
 
 })
 
