@@ -107,6 +107,27 @@ test('test that a specific blog gets deleted from the database', async () => {
   expect(idArray).not.toContain(blogToDelete.id)
 })
 
+test('changing of a single blog', async () => {
+
+  const blogsAtStart = await helper.blogsInDb()
+  const editedBlog = blogsAtStart[2]
+
+  const changeLikesAmount = () => {
+    editedBlog.likes = editedBlog.likes -1  
+  }
+
+  changeLikesAmount()
+
+  await api
+    .put(`/api/blogs/${editedBlog.id}`)
+    .send(editedBlog)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd[2].likes).toBe(editedBlog.likes)
+
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
