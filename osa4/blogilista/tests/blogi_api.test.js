@@ -4,6 +4,7 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 
 
@@ -125,6 +126,100 @@ test('changing of a single blog', async () => {
   const blogsAtEnd = await helper.blogsInDb()
 
   expect(blogsAtEnd[2].likes).toBe(editedBlog.likes)
+
+})
+
+describe('addition of a new user', () => {
+
+  beforeEach( async () => {
+    await User.deleteMany({})
+
+    const userObjects = helper.initialUsers.map(user => new User(user))
+    const promiseArray = userObjects.map(user => user.save())
+    await Promise.all(promiseArray)
+  })
+  
+  test('adding a new user fails when username is missing', async() => {
+
+    const userWithUsernameMissing = {
+      name: "Test",
+      password: "Testpassword"
+    }
+    await api
+      .post('/api/users')
+      .send(userWithUsernameMissing)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(helper.initialUsers.length)
+
+  })
+
+  test('adding a new user fails when password is missing', async() => {
+    const userWithPasswordMissing = {
+      username: "Test UserName",
+      name: "Test Name"
+    }
+
+    await api
+      .post('/api/users')
+      .send(userWithPasswordMissing)
+      .expect(400)
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd).toHaveLength(helper.initialUsers.length)
+  })
+
+  test('adding a new user with an username with less than 3 characters fails', async () => {
+
+    const userWithTooShortUsername = {
+      username: "ul",
+      name: "Test Name",
+      password: "TestPassword"
+    }
+
+    await api
+      .post('/api/users')
+      .send(userWithTooShortUsername)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(helper.initialUsers.length)  
+  })
+
+  test('adding a new user with a password with less than 3 characters fails', async () => {
+
+    const userWithTooShortPassword = {
+      username: "Test Username",
+      name: "Test Name",
+      password: "ul"
+    }
+
+    await api
+      .post('/api/users')
+      .send(userWithTooShortPassword)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(helper.initialUsers.length)  
+  })
+
+  test('adding a new user with the same username that already exists in the databse fails', async () => {
+
+    const userWithAlreadyExistingUsername = {
+      username: "hellas",
+      name: "Test Name",
+      password: "Test Password"
+    }
+
+    await api
+      .post('/api/users')
+      .send(userWithAlreadyExistingUsername)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(helper.initialUsers.length)  
+  })
 
 })
 

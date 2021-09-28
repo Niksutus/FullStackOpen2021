@@ -1,4 +1,6 @@
+const { isValidObjectId } = require('mongoose')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initalBlogs = [
   {
@@ -51,11 +53,33 @@ const initalBlogs = [
   }  
 ]
 
+const initialUsers = [
+  {
+    _id: "6151c60277411b1294a3905a",
+    username:"hellas",
+    name: "Arto Hellas",
+    passwordHash: "$2b$10$NqnQJjkFjx/58PBOb/4CFOwEllFftOmmsTCi76YRKaEqhCuaMYDMm",
+    __v:0
+  },
+
+  {
+    _id: "6151c60b77411b1294a3905e",
+    username:"mluukkai",
+    name: "Matti Luukkainen",
+    passwordHash: "$2b$10$IfYUpx6h8KiyT7HLWclHQec4ThodKZB3HEOEcM6wKoPNaAD7weaLO",
+    __v:0 
+  }
+]
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
 }
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
 module.exports = {
-  initalBlogs, blogsInDb
+  initalBlogs, blogsInDb, usersInDb, initialUsers
 }

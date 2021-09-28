@@ -153,7 +153,6 @@ describe('The most likes', () => {
 
   test('if one blog has the most votes', () => {
     const result = listHelper.favoriteBlog(blogs)
-    console.log(result)
     expect(result).toEqual({
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
@@ -163,7 +162,6 @@ describe('The most likes', () => {
 
   test('if multiple blogs with the same amount of votes', () => {
     const result = listHelper.favoriteBlog(blogs)
-    console.log(result)
     expect(result).toEqual({
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
