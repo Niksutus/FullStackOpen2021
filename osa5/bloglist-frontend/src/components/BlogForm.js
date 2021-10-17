@@ -45,6 +45,7 @@ const BlogForm = ({
 
             <button type="submit">create</button>
           </form>
+          <button onClick={closeBlogForm}>cancel</button>
       </div>
 
     )

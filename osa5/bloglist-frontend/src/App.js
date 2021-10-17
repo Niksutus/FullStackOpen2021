@@ -17,7 +17,7 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [notification, setNotification] = useState(null)
-  // const [blogFormVisible, setBlogFormVisible] = useState(false)
+  const [blogFormVisible, setBlogFormVisible] = useState(false)
   
 
   useEffect(() => {
@@ -82,6 +82,7 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      setBlogFormVisible(false)
       setTimeout(() => {
         setNotification(null)
       }, 5000)
@@ -93,13 +94,13 @@ const App = () => {
     }
   }
 
-  // const closeBlogForm = () => {
-  //   setBlogFormVisible(false)
-  // }
+  const closeBlogForm = () => {
+    setBlogFormVisible(false)
+  }
 
   
-  // const hideWhenVisible = { display: blogFormVisible? 'none' : '' }
-  // const showWhenVisible = { display: blogFormVisible? '' : 'none' }
+  const hideWhenVisible = { display: blogFormVisible? 'none' : '' }
+  const showWhenVisible = { display: blogFormVisible? '' : 'none' }
 
   if(user === null) {
     return(
@@ -137,21 +138,22 @@ const App = () => {
       <Notification notification={notification}/>
       <p>{user.name} is logged in <button onClick={logoutHandler}>logout</button></p>
 
-      {/* <div style={hideWhenVisible}>
+      <div style={hideWhenVisible}>
 
         <button onClick={() => setBlogFormVisible(true)}>create new blog</button>
-      </div> */}
-      
-      <BlogFrom 
-        title={title}
-        author={author}
-        url={url}
-        handleTitleChange={({ target }) => setTitle(target.value)}
-        handleAuthorChange={({ target }) => setAuthor(target.value)}
-        handleUrlChange = {({ target }) => setUrl(target.value)}
-        createBlogHandler = {createBlogHandler}
-        // closeBlogForm = {closeBlogForm}
-      />
+      </div>
+      <div style={showWhenVisible}>
+        <BlogFrom 
+          title={title}
+          author={author}
+          url={url}
+          handleTitleChange={({ target }) => setTitle(target.value)}
+          handleAuthorChange={({ target }) => setAuthor(target.value)}
+          handleUrlChange = {({ target }) => setUrl(target.value)}
+          createBlogHandler = {createBlogHandler}
+          closeBlogForm = {closeBlogForm}
+        />
+      </div>
 
       {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
