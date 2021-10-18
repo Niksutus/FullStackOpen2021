@@ -18,12 +18,11 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [notification, setNotification] = useState(null)
   const [blogFormVisible, setBlogFormVisible] = useState(false)
-  
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -35,17 +34,17 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
- 
+
   const loginHandler = async (event) => {
     event.preventDefault()
-    
+
     try{
       const user = await loginService.login({ username, password, })
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      
+
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -57,9 +56,9 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
-    
+
   }
-  
+
   const logoutHandler = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
@@ -98,7 +97,7 @@ const App = () => {
     setBlogFormVisible(false)
   }
 
-  
+
   const hideWhenVisible = { display: blogFormVisible? 'none' : '' }
   const showWhenVisible = { display: blogFormVisible? '' : 'none' }
 
@@ -111,24 +110,24 @@ const App = () => {
           <div>
             username
             <input
-            type="text"
-            value={username}
-            name="password"
-            onChange={({ target }) => setUsername(target.value)}
+              type="text"
+              value={username}
+              name="password"
+              onChange={({ target }) => setUsername(target.value)}
             />
           </div>
           <div>
             password
             <input
-            type="text"
-            value={password}
-            name="password"
-            onChange={({ target }) => setPassword(target.value)}
+              type="text"
+              value={password}
+              name="password"
+              onChange={({ target }) => setPassword(target.value)}
             />
           </div>
           <button type="submit">login</button>
         </form>
-        </div>
+      </div>
     )
   }
 
@@ -143,7 +142,7 @@ const App = () => {
         <button onClick={() => setBlogFormVisible(true)}>create new blog</button>
       </div>
       <div style={showWhenVisible}>
-        <BlogFrom 
+        <BlogFrom
           title={title}
           author={author}
           url={url}
@@ -156,11 +155,9 @@ const App = () => {
       </div>
 
       {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-      )}
-      
-
-
+        <Blog key={blog.id} blog={blog} />
+      )
+      }
     </div>
   )
 }
